@@ -1,5 +1,5 @@
 import java.util.Scanner;
-public class Main {
+public class KrabApp {
     public static void main(String[] args) {
         int option,historyCount =0 ,historyNum = 0;
         long points = 0;
@@ -36,30 +36,53 @@ public class Main {
                     distant = scanner.nextDouble();
                     System.out.print("Enter toll (rm): ");
                     tolls = scanner.nextDouble();
-                    if (distant < 0){
+                    if (distant <= 0){
                         System.out.println("Invalid distance !");
-                    } else if (tolls <0) {
+                    } else if (tolls <=0) {
                         System.out.println("Invalid tolls !");
                     } else{
-                        System.out.printf("Have 0 Krab Points. Use it? (Y/N): ", points);
+                        System.out.printf("Have %d Krab Points. Use it? (Y/N): ", points);
                         scanner.nextLine();
                         usepoint = scanner.nextLine().toLowerCase();
                         if (!(usepoint.equals("y") || usepoint.equals("n"))) {
                             System.out.println("Invalid option !");
-                        } else if ((usepoint.equals("y") && points < 100)) {
                             System.out.println("Your point is not enough, so we save the initial cost !");
                         }else {
                             if (distant <= 5) tripcost = 5.0;
                             else tripcost = Math.round((6 * Math.sqrt(0.5 * distant - 2) + 5) * 100.0) / 100.0;
+                            discount = 0;
+                            double temporary = tripcost;
+                            boolean usedPoints  = false;
+                            if (usepoint.equals("y") && points >= 100) {
+                                usedPoints = true;
+                                discount = (points / 100) * 5;
+                                points = 0;
+                                if (discount >= tolls + tripcost) {
+                                    tolls = 0;
+                                    tripcost = 0;
+                                } else if ( discount >= tripcost) {
+                                    tolls -= ( discount - tripcost);
+                                } else {
+                                    tripcost -= discount;
+                                }
+                            } else if (usepoint.equals("y"))
+                                System.out.println("Your point is not enough, so we save the initial cost !");
+                            long earnPoints;
+                            if (usedPoints)
+                                earnPoints =0;
+                            else {
+                                earnPoints = Math.round(((tripcost + tolls) * 10));
+                                points += earnPoints;
+                            }
 
-                            /*System.out.printf("%-19s:%12.2f\n", "Trip Cost", tripcost);
+                            System.out.printf("%-19s:%12.2f\n", "Trip Cost", temporary);
                             System.out.printf("%-19s:%12.2f\n", "Toll", tolls);
+                            System.out.printf("%-19s: -%10.2f\n","Discount",discount);
                             System.out.print("--------------------------------\n");
                             System.out.printf("%-19s:%12.2f\n", "Total", tripcost + tolls);
-                            points += Math.round((tripcost + tolls)*10);
-                            System.out.printf("%-19s:%12d\n","Krab Points Earned",Math.round((tripcost + tolls)* 10));
+                            System.out.printf("%-19s:%12d\n","Krab Points Earned",earnPoints);
                             historyNum++;
-                            String newHis = String.format("%d%9s%-4s: Charged %.2f rm and earned %d Krab Points",historyNum," ","CAR",tripcost + tolls,Math.round((tripcost +tolls) *10));
+                            String newHis = String.format("%d%9s%-4s: Charged %.2f rm and earned %d Krab Points",historyNum," ","CAR",tripcost + tolls,earnPoints);
                             if (historyCount < 5){
                                 history[historyCount] = newHis;
                                 historyCount++;
@@ -68,7 +91,7 @@ public class Main {
                                     history[i] = history[i + 1];
                                 }
                                 history[4] = newHis;
-                            }*/
+                            }
 
                         }
                     }
@@ -111,8 +134,12 @@ public class Main {
                     System.out.printf("%-18s%d\n","Krab Points",points);
                     System.out.printf("%-5s%s%15s\n","Hist","#","Description");
                     System.out.printf("---------------------------------------------------------------\n");
-                    for (int i = historyCount - 1; i >= 0; i--) {
-                        System.out.println(history[i]);
+                    if (historyCount == 0){
+                        System.out.println("(No history at the moment!)");
+                    }else {
+                        for (int i = historyCount - 1; i >= 0; i--) {
+                            System.out.println(history[i]);
+                        }
                     }
                     break;
                 case 4:
