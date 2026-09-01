@@ -46,20 +46,44 @@ public class Main {
                         usepoint = scanner.nextLine().toLowerCase();
                         if (!(usepoint.equals("y") || usepoint.equals("n"))) {
                             System.out.println("Invalid option !");
-                        } else if ((usepoint.equals("y") && points < 100)) {
                             System.out.println("Your point is not enough, so we save the initial cost !");
                         }else {
                             if (distant <= 5) tripcost = 5.0;
                             else tripcost = Math.round((6 * Math.sqrt(0.5 * distant - 2) + 5) * 100.0) / 100.0;
+                            discount = 0;
+                            double temporary = tripcost;
+                            boolean usedPoints  = false;
+                            if (usepoint.equals("y") && points >= 100) {
+                                usedPoints = true;
+                                discount = (points / 100) * 5;
+                                points = 0;
+                                if (discount >= tolls + tripcost) {
+                                    tolls = 0;
+                                    tripcost = 0;
+                                } else if ( discount >= tripcost) {
+                                    discount -= tripcost;
+                                    tolls -= discount;
+                                } else {
+                                    tripcost -= discount;
+                                }
+                            } else if (usepoint.equals("y"))
+                                System.out.println("Your point is not enough, so we save the initial cost !");
+                            long earnPoints;
+                            if (usedPoints)
+                                earnPoints =0;
+                            else {
+                                earnPoints = Math.round(((tripcost + tolls) * 10));
+                                points += earnPoints;
+                            }
 
-                            /*System.out.printf("%-19s:%12.2f\n", "Trip Cost", tripcost);
+                            System.out.printf("%-19s:%12.2f\n", "Trip Cost", temporary);
                             System.out.printf("%-19s:%12.2f\n", "Toll", tolls);
+                            System.out.printf("%-19s:%12.2f\n","Discount",discount);
                             System.out.print("--------------------------------\n");
                             System.out.printf("%-19s:%12.2f\n", "Total", tripcost + tolls);
-                            points += Math.round((tripcost + tolls)*10);
-                            System.out.printf("%-19s:%12d\n","Krab Points Earned",Math.round((tripcost + tolls)* 10));
+                            System.out.printf("%-19s:%12d\n","Krab Points Earned",earnPoints);
                             historyNum++;
-                            String newHis = String.format("%d%9s%-4s: Charged %.2f rm and earned %d Krab Points",historyNum," ","CAR",tripcost + tolls,Math.round((tripcost +tolls) *10));
+                            String newHis = String.format("%d%9s%-4s: Charged %.2f rm and earned %d Krab Points",historyNum," ","CAR",tripcost + tolls,earnPoints);
                             if (historyCount < 5){
                                 history[historyCount] = newHis;
                                 historyCount++;
@@ -68,7 +92,7 @@ public class Main {
                                     history[i] = history[i + 1];
                                 }
                                 history[4] = newHis;
-                            }*/
+                            }
 
                         }
                     }
