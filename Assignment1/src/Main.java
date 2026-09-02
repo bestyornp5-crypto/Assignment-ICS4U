@@ -36,12 +36,12 @@ public class Main {
                     distant = scanner.nextDouble();
                     System.out.print("Enter toll (rm): ");
                     tolls = scanner.nextDouble();
-                    if (distant < 0){
+                    if (distant <= 0){
                         System.out.println("Invalid distance !");
-                    } else if (tolls <0) {
+                    } else if (tolls <= 0) {
                         System.out.println("Invalid tolls !");
                     } else{
-                        System.out.printf("Have 0 Krab Points. Use it? (Y/N): ", points);
+                        System.out.printf("Have %d Krab Points. Use it? (Y/N): ", points);
                         scanner.nextLine();
                         usepoint = scanner.nextLine().toLowerCase();
                         if (!(usepoint.equals("y") || usepoint.equals("n"))) {
@@ -61,8 +61,7 @@ public class Main {
                                     tolls = 0;
                                     tripcost = 0;
                                 } else if ( discount >= tripcost) {
-                                    discount -= tripcost;
-                                    tolls -= discount;
+                                    tolls -= (discount - tripcost);
                                 } else {
                                     tripcost -= discount;
                                 }
@@ -78,7 +77,7 @@ public class Main {
 
                             System.out.printf("%-19s:%12.2f\n", "Trip Cost", temporary);
                             System.out.printf("%-19s:%12.2f\n", "Toll", tolls);
-                            System.out.printf("%-19s:%12.2f\n","Discount",discount);
+                            System.out.printf("%-19s: -%10.2f\n","Discount",discount);
                             System.out.print("--------------------------------\n");
                             System.out.printf("%-19s:%12.2f\n", "Total", tripcost + tolls);
                             System.out.printf("%-19s:%12d\n","Krab Points Earned",earnPoints);
@@ -112,7 +111,8 @@ public class Main {
                         System.out.printf("%-19s:%12.2f\n", "Delivery Fee", fdelivery);
                         System.out.print("--------------------------------\n");
                         System.out.printf("%-19s:%12.2f\n", "Total", fprice + tax + fdelivery);
-                        points += Math.round((fprice) * 3);
+                        long foodPoints = (long) (fprice * 3 );
+                        points += foodPoints;
                         System.out.printf("%-19s:%12d\n", "Krab Points Earned", Math.round((fprice)*3));
                         historyNum++;
                         String newHis = String.format("%d%13s: Charged %.2f rm and earned %d Krab Points",historyNum,"FOOD",fprice + tax + fdelivery,Math.round((fprice) *3));
