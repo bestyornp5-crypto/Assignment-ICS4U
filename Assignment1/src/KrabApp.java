@@ -19,10 +19,10 @@ public class KrabApp {
             if (scanner.hasNextInt()){
                 option = scanner.nextInt();
                 if (option < 1 || option > 4) {
-                    System.out.println("Invalid option!");
+                    System.out.println("Invalid Option!");
                 }
             }else {
-                System.out.println("Invalid option !");
+                System.out.println("Invalid Option!");
                 scanner.next();
                 option = 0; // To continue to loop
             }
@@ -37,15 +37,15 @@ public class KrabApp {
                     System.out.print("Enter toll (rm): ");
                     tolls = scanner.nextDouble();
                     if (distant <= 0){
-                        System.out.println("Invalid distance !");
+                        System.out.println("Invalid distance!");
                     } else if (tolls <=0) {
-                        System.out.println("Invalid tolls !");
+                        System.out.println("Invalid tolls!");
                     } else{
                         System.out.printf("Have %d Krab Points. Use it? (Y/N): ", points);
                         scanner.nextLine();
                         usepoint = scanner.nextLine().toLowerCase();
                         if (!(usepoint.equals("y") || usepoint.equals("n"))) {
-                            System.out.println("Invalid option !");
+                            System.out.println("WARNING: Invalid Option!");
                             System.out.println("Your point is not enough, so we save the initial cost !");
                         }else {
                             if (distant <= 5) tripcost = 5.0;
@@ -65,8 +65,10 @@ public class KrabApp {
                                 } else {
                                     tripcost -= discount;
                                 }
-                            } else if (usepoint.equals("y"))
-                                System.out.println("Your point is not enough, so we save the initial cost !");
+                            } else if (usepoint.equals("y")) {
+                                System.out.println("WARNING: Invalid Option!");
+                                break;
+                            }
                             long earnPoints;
                             if (usedPoints)
                                 earnPoints =0;
@@ -82,7 +84,12 @@ public class KrabApp {
                             System.out.printf("%-19s:%12.2f\n", "Total", tripcost + tolls);
                             System.out.printf("%-19s:%12d\n","Krab Points Earned",earnPoints);
                             historyNum++;
-                            String newHis = String.format("%d%9s%-4s: Charged %.2f rm and earned %d Krab Points",historyNum," ","CAR",tripcost + tolls,earnPoints);
+                            String newHis;
+                            if (usedPoints) {
+                                newHis = String.format("%d%9s%-4s: Charged %.2f rm,discounted %.2f rm", historyNum, " ", "CAR", tripcost + tolls, discount);
+                            } else {
+                                newHis = String.format("%d%9s%-4s: Charged %.2f rm and earned %d Krab Points", historyNum, " ", "CAR", tripcost + tolls, earnPoints);
+                            }
                             if (historyCount < 5){
                                 history[historyCount] = newHis;
                                 historyCount++;
@@ -102,7 +109,7 @@ public class KrabApp {
                     System.out.print("Enter distant (KM): ");
                     distant = scanner.nextDouble();
                     if (fprice <= 0 || distant <= 0) {
-                        System.out.println("Invalid option !");
+                        System.out.println("WARNING: Invalid Option of Fprice or Distance !");
                     } else {
                         fdelivery = (double) 15 / 4 * distant;
                         tax = 0.12 * fprice;
