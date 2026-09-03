@@ -1,5 +1,5 @@
 import java.util.Scanner;
-public class Main {
+public class KrabApp {
     public static void main(String[] args) {
         int option,historyCount =0 ,historyNum = 0;
         long points = 0;
@@ -38,7 +38,7 @@ public class Main {
                     tolls = scanner.nextDouble();
                     if (distant <= 0){
                         System.out.println("Invalid distance !");
-                    } else if (tolls < 0) {
+                    } else if (tolls <= 0) {
                         System.out.println("Invalid tolls !");
                     } else{
                         System.out.printf("Have %d Krab Points. Use it? (Y/N): ", points);
