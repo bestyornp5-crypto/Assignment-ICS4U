@@ -103,8 +103,8 @@ public class StuSys {
     if (!db.IsAcctExist(id)){
       return ERR_ID_NOT_FOUND;
     }
-    String acctualPass = db.GetAcctPass(id);
-    if(acctualPass != pass){
+    String actualPass = db.GetAcctPass(id);
+    if(!actualPass.equals( pass) || actualPass == null || pass == null){
       return ERR_WRONG_PASS;
     }
     loginAcctId = id; // this is id will use until user want to log out
@@ -138,7 +138,7 @@ public class StuSys {
     String courseInfo = db.GetAllCourseInfo(id);
     if (courseInfo == null || courseInfo.trim().isEmpty()) {
       return 0;
-
+    // courseInfo take from parts[3] to [n - 1] because the 3 first parts is id,name and password
     }
     String[] courses = courseInfo.split(":");
     return courses.length;
@@ -187,9 +187,8 @@ public class StuSys {
       return GRADE_TBD;
     }
     try {
-      return Integer.parseInt(parts[1]); // Solved for Ex: "96"
-    }
-    catch(NumberFormatException e){
+      return Integer.parseInt(parts[Database.ARRAY_COURSE_GRADE_POS].trim()); //"96" --> 96
+    } catch (NumberFormatException e) {
       return GRADE_TBD;
     }
 
@@ -210,7 +209,7 @@ public class StuSys {
       int count = 0; // We dont know how many course completed , so cannot take totalCourse to use
       for(int i = 0; i < totalCourse; i++){
         int grade = GetCourseGradeAt(id,i);
-        if (grade >= 0 || grade <= 100){
+        if (grade >= 0 && grade <= 100){
           sum += grade;
           count++;
         }
@@ -245,7 +244,7 @@ public class StuSys {
     int totalCourse = NumCourse(id);
     if (pos >= totalCourse || pos < 0)
       return ERR_INVALID_POS;
-    boolean yah = db.UpdateCourseGradeAt(id, pos, GRADE_DROPPED);
+    boolean yah = db.UpdateCourseGradeAt(id, pos, GRADE_DROPPED); // It will put -200 become score of pos
     return yah ? STATUS_SUCESS : ERR_INVALID_POS;
     // If 1 return yah, if not return -5
 
@@ -289,7 +288,7 @@ public class StuSys {
     if (!currentPass.equals(oldPass))
       return ERR_WRONG_PASS;
     if (newPass.length() != PASS_LENGTH)
-      return ERR_WRONG_PASS;
+      return ERR_PASS_LENGTH;
     if (!newPass.equals(retypePass))
       return ERR_PASS_MISMATCH;
 
