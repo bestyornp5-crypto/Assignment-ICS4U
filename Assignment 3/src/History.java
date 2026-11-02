@@ -3,6 +3,7 @@ import java.util.Calendar;
 public class History extends Book {
   // Priavte asstribute of history beacause history has Before Common Era
   private boolean isBCE;
+  // to check BCE or not
   //=============== Constructor =================
   public History(int bookId, String title, int numPages, boolean isBCE) {
     super(bookId,title,numPages);
@@ -14,8 +15,6 @@ public class History extends Book {
   
   
   //============= Public Methods ===============
-
-
   @Override
   public boolean Borrow(String borrowerName, int numDays) {
     int maxDays = 0;

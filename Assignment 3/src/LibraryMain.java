@@ -35,40 +35,48 @@ public class LibraryMain {
             System.out.println("2. Non Fiction");
             System.out.println("3. Novel");
             System.out.print("Enter Book Type: ");
-            int typeBook = scanner.nextInt();
-            scanner.nextLine();
-
-            System.out.print("Enter Book Title: ");
-            String title = scanner.nextLine();
-
-            System.out.print("Enter Book Number of Pages: ");
-            int pages = scanner.nextInt();
-            scanner.nextLine();
-
-            String extraInfo ="";
-            if(typeBook == 1){
-              System.out.println("Book in BCE Era (Y/N): ");
-              extraInfo = scanner.nextLine();
-            } else if (typeBook == 2){
-              System.out.print("Enter Genre: ");
-              extraInfo = scanner.nextLine();
-            } else if (typeBook == 3){
-              System.out.print("Enter Difficulty of Englis Level: ");
-              extraInfo = scanner.nextLine();
-            }
-
-            int solveBookType = typeBook - 1;
-            int result = libSys.AddBook(solveBookType,title,pages,extraInfo);
-            // Because to define book
-            // 0 - History, 1-Non-Fic , 2 - Novel, but we start from 1,2,3 so we minus 1
-            if (result == libSys.SUCCESS){
-              System.out.printf("Successfully added the book \'%s\' ",title);
-            } else if (result == libSys.INVALID_BOOKTYPE){ // Mean the type of book error
-              System.out.println("Error: Invalid Type of Book !");
-            } else if (result == libSys.INVALID_NUMPAGES){ // Number pages < -1
-              System.out.println("Error: Invalid number page !");
-            } else if (result == libSys.INVALID_EXTRA_INFO){ // Like Novel book but BCE --> Wrong
-              System.out.println("Error: Invalid Extra Information !");
+            // Add the attributions of book
+       
+            String typeBook1 = scanner.nextLine();
+            // I will check that the user wil write 1,2,3 instead of History , Non_Fiction or Novel
+            if (typeBook1.matches("\\d+") && Integer.parseInt(typeBook1) <= 3 && Integer.parseInt(typeBook1) >= 1 ){
+              // I try to use matches to check that it is contain number or not and the number it contain is from 1 to 3 or not
+              int typeBook = Integer.parseInt(typeBook1);
+              System.out.print("Enter Book Title: ");
+              String title = scanner.nextLine();
+              
+              System.out.print("Enter Book Number of Pages: ");
+              int pages = scanner.nextInt();
+              scanner.nextLine();
+              
+              String extraInfo =""; // Make a empty String to collect the Extra_Info of which books
+              if(typeBook == 1){
+                System.out.print("Book in BCE Era (Y/N): ");
+                extraInfo = scanner.nextLine();
+              } else if (typeBook == 2){
+                System.out.print("Enter Genre: ");
+                extraInfo = scanner.nextLine();
+              } else if (typeBook == 3){
+                System.out.print("Enter Difficulty of English Level: ");
+                extraInfo = scanner.nextLine();
+              }
+              
+              int solveBookType = typeBook - 1;
+              int result = libSys.AddBook(solveBookType,title,pages,extraInfo);
+              // Because to define book
+              // 0 - History, 1-Non-Fic , 2 - Novel, but we start from 1,2,3 so we minus 1
+              if (result == libSys.SUCCESS){
+                System.out.printf("Successfully added the book \'%s\' ",title);
+              } else if (result == libSys.INVALID_BOOKTYPE){ // Mean the type of book error
+                System.out.println("Error: Invalid Type of Book !");
+              } else if (result == libSys.INVALID_NUMPAGES){ // Number pages < -1
+                System.out.println("Error: Invalid number page !");
+              } else if (result == libSys.INVALID_EXTRA_INFO){ // Like Novel book but BCE --> Wrong
+                System.out.println("Error: Invalid Extra Information !");
+              }
+            } else {
+              System.out.println("Error: Invalid type of book !");
+              break;
             }
 
             break;
@@ -114,7 +122,7 @@ public class LibraryMain {
             scanner.nextLine();
 
             int resultBorrowed = libSys.BorrowBook(borrowId,nameBorrower,borrowDays);
-            // Check
+            // Check if borrow success or have any mistake
             if (resultBorrowed == libSys.SUCCESS){
               System.out.printf("Successfully borrow book \'%d\'. ", borrowId);
             } else if (resultBorrowed == libSys.INVALID_ID ){ // Invalid id report from my back end
@@ -132,7 +140,8 @@ public class LibraryMain {
             System.out.print("Enter book ID to return: ");
             int returnId = scanner.nextInt();
             scanner.nextLine();
-            int resultReturn = libSys.ReturnBook(returnId);
+            int resultReturn = libSys.ReturnBook(returnId); // It will give me
+            // 1 --> Success , -3 --> wrong id, -6 --> never borrowed
             if(resultReturn == libSys.SUCCESS){
               System.out.printf("Successfully return book \'%d\'",returnId);
 
@@ -142,7 +151,7 @@ public class LibraryMain {
               System.out.println("Error: The book was never borrowed.");
             }
             break;
-          case 6:
+          case 6: // Stop using the system
             System.out.println("Library system shuts down.");
             break;
           default:
@@ -155,7 +164,7 @@ public class LibraryMain {
       else {
         choice = 0;
         System.out.println("Invalid type of input !");
-      }
+      } // Invalid input checking
       System.out.println();
 
     } while(choice != 6);

@@ -38,13 +38,12 @@ public class LibrarySys {
     if (bookType == Book.HISTORY){
       // This is the book of history but the attribute or the extra infor of novel is will be wrong
       String getExtraInfo = extraInfo.toLowerCase();
-      // Both Y/N y/n true false True False will be accepted
-      if( getExtraInfo.equals("true") || getExtraInfo.equals("false") || getExtraInfo.equals("y") || getExtraInfo.equals("n")) {
+      // Both Y/N y/n yes no Yes No still can
+      if( getExtraInfo.equals("yes") || getExtraInfo.equals("no") || getExtraInfo.equals("y") || getExtraInfo.equals("n") ) {
         // It will return True the extraInfo is correct require of history book
         return true;
       }
-
-      }
+    }
     else if (bookType == Book.NON_FICTION){
       // No restriction
       // -> But can be Empty() of null
@@ -61,7 +60,7 @@ public class LibrarySys {
       }
     }
     return false; // It is not Novel not History not Non_Fiction
-    // Maybe user inputed funny number or funny things
+    // Maybe user input funny number or funny things
 
   }
   private Book bookWhere(int bookId) {
@@ -119,15 +118,18 @@ public class LibrarySys {
     int newBookId = this.bookDb.GenNewBookId();
     Book newBook = null;
 
-    if (bookType == Book.HISTORY) {
+    if (bookType == Book.HISTORY) { // If it is History then ask about BCE
       String getInfo = extraInfo.toLowerCase();
       boolean isBCE = getInfo.equals("true") || getInfo.equals("y");
       newBook = new History(newBookId, title, numPages, isBCE);
 
-    } else if(bookType == Book.NON_FICTION){
+    } else if(bookType == Book.NON_FICTION){ //  if it is Non_Fiction --> no restriction so done care about extraInfo
       newBook = new NonFiction(newBookId,title,numPages,extraInfo);
     } else if(bookType == Book.NOVEL){
-      int level = Integer.parseInt(extraInfo);
+      int level = Integer.parseInt(extraInfo); // if it is Novel asks level from 1 - 3
+      // --> Because the type of extraInfo is String so I need to change to int
+
+
       newBook = new Novel(newBookId, title, numPages, level);
     }
     return this.bookDb.AddBook(newBook);
@@ -137,6 +139,10 @@ public class LibrarySys {
    * Note: This is the only except for you to print in the backend here */
   public void DisplayAllBooks() {
     if(this.bookDb.NumBooks() == 0){
+      System.out.printf("%8s%14s%35s%11s%12s%25s%14s\n","Book ID","Book Type","Title","Num Page","Extra Info","Borrower","Due Date"); //--> Design later
+      System.out.println("================================================" +
+              "============================================================" +
+              "=============");
       System.out.println("No books in the system.");
       return;
     }
@@ -148,6 +154,7 @@ public class LibrarySys {
       Book book = this.bookDb.GetBookAt(i);
       if (book != null){
         String typeBook = "";
+        // Check the acctual we will know what is acctual of this book
         if(book instanceof History){
           typeBook ="History";
         } else if (book instanceof NonFiction){
@@ -177,6 +184,10 @@ public class LibrarySys {
    *                   the Book class. */
   public void DisplayAllBooks(int bookType) {
     if ( this.bookDb.NumBooks() == 0){
+      System.out.printf("%8s%14s%35s%11s%12s%25s%14s\n","Book ID","Book Type","Title","Num Page","Extra Info","Borrower","Due Date"); //--> Design later
+      System.out.println("================================================" +
+              "============================================================" +
+              "=============");
       System.out.println("No books in the system.");
       return;
     }
@@ -194,6 +205,15 @@ public class LibrarySys {
     boolean found = false; // This variablle to check if the type book is fining exists at least one time
     for (int i = 0; i < this.bookDb.NumBooks(); i++){
       Book book = this.bookDb.GetBookAt(i);
+
+      /*
+      Here my plan is make a variable about - got - found
+      got -> To find the type of book they are finding , because we do not know how many the type of books
+      in the library are same with the type of book we are finding and , so got(variable) will do it
+      --> If got(variable) is changed at least one time the that mean in the library system exist at least one book is same type with
+      the type of book we are finding --> change found(variable) and it will become true forever
+      --> Rely on found(variable) we can check --> System.out.println("The typeBook does not exist in the Library system.");
+       */
       if (book != null){
         boolean got = false;
         String typeBookNow = "";
@@ -217,7 +237,9 @@ public class LibrarySys {
           String dueDateNow = "";
           if (book.GetDueDate() != null) {
             java.text.SimpleDateFormat newDueDate = new java.text.SimpleDateFormat("yyyy-MM-dd");
+            // Format the dueDate
             dueDateNow = newDueDate.format(book.GetDueDate());
+            // Find the dueDate to print
 
           }
           System.out.printf("%8d%14s%35s%11d%12s%25s%14s\n",book.GetBookId(), typeBookNow,

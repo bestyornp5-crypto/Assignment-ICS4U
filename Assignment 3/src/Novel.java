@@ -1,7 +1,7 @@
 import java.util.Calendar;
 
 public class Novel extends Book {
-  // We have a private attribution
+  // We have a private attribution --> Level of English
   private int level;
 
 
@@ -23,7 +23,8 @@ public class Novel extends Book {
   public boolean Borrow(String borrowerName, int numDays) {
     double page = (double)this.GetNumPages();
     double doubleDays = ((5/this.level) * Math.pow(2.0,page/195.0));
-    int maxDays = (int)(doubleDays + 0.999999999999999999999);
+    // Following the calculations of the requirements
+    int maxDays = (int)(doubleDays + 0.999999999999999999999); // Make it rounds up
 
     if (numDays < 1 || numDays > maxDays){
       return false;
